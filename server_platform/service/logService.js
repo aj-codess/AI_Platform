@@ -217,6 +217,7 @@ const get_name=(id)=>{
     pass_isExist,
     gen_id,
     sign_token,
+    verify_token,
     get_id_from_db,
     id_verify,
     get_name

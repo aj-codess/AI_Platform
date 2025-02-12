@@ -31,7 +31,7 @@ const new_log_control = async (req, res) => {
                 email: log_mail_checks,
                 password: log_pass_checks,
                 message: 'Authentication successful',
-                user_id: user_id
+                // user_id: user_id
             });
 
     

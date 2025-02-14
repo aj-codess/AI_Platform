@@ -1,9 +1,9 @@
 import express from "express";
 import auth_control from "./../controller/auth_controller.js";
 
-const auth = express.Router();
+const auth_router = express.Router();
 
-auth.all("*", async (req, res, next) => {
+auth_router.all("*", async (req, res, next) => {
 
     if (req.url.includes("login")) {
 
@@ -21,8 +21,8 @@ auth.all("*", async (req, res, next) => {
             const isValid_obj = await auth_control.cookie_validity(token);
 
             if (isValid_obj.isValid) {
-
-                req.id = isValid_obj.token_id;
+console.log(isValid_obj);
+                // req.id = isValid_obj.token_id;
 
                 return next();
             }
@@ -37,6 +37,4 @@ auth.all("*", async (req, res, next) => {
 });
 
 
-export default {
-    auth
-};
+export default auth_router;

@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 
 import net from "./../global_dcl/base.js";
 import dcl from "./../global_dcl/dcl.js";
@@ -13,13 +12,17 @@ const login_new=async(payload)=>{
             withCredentials: true,
         });
 
-        const cookies=response.headers["set-cookie"];
+        if (response.headers["set-cookie"]) {
+            const cookies = response.headers["set-cookie"];
+        
+            const authCookie = cookies.find((cookie) => cookie.startsWith("auth_token="));
+        
+            if (authCookie) {
+                dcl.authToken = authCookie.split("=")[1].split(";")[0];
+            }
 
-        if(cookies){
-
-            dcl.authToken=cookie.find((cookie) => cookie.startsWith("auth_token="))?.split("=")[1].split(";")[0];
-
-        };
+        }
+        
 
         return response.data;
 

@@ -39,27 +39,7 @@ class entry{
 
 const payload = {
     email: "jgyei339@gmail.com",
-    password: "C%rypto_2_get"
+    password: "C%ry9to_2_g3t"
 };
 
 const dev_entry = new entry();
-
-// dev_entry.logAs_new(payload).then(async (response) => {
-
-//     console.log("response from server ", response);
-    
-//     await new Promise(resolve => setTimeout(resolve, 5000));
-    
-//     console.log(dcl.authToken);
-
-//     dev_entry.get_prof().then(response => {
-//         console.log("response from the server - ", response);
-//     });
-
-// });
-
-
-
-// dev_entry.logAs_temp().then((response)=>{
-//     console.log(response);
-// });

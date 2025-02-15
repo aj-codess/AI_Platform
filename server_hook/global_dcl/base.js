@@ -12,8 +12,8 @@ const net=axios.create({
 });
 
 
-if(dcl.authToken){
-    net.interceptors.request.use((config)=>{
+
+net.interceptors.request.use((config)=>{
 
         config.headers["Authorization"]=`Bearer ${dcl.authToken}`;
 
@@ -24,7 +24,6 @@ if(dcl.authToken){
 return Promise.reject(error);
 
 });
-};
 
 
 

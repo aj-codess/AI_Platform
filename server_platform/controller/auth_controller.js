@@ -1,12 +1,12 @@
 import log_service from "./../service/logService.js";
 
-const cookie_validity=async(cookie)=>{
+const cookie_validity=async(token)=>{
 
-    const decode=await log_service.verify_token(cookie);
+    const decode=await log_service.verify_token(token);
 
     if(decode){
         return {
-            tokenIsValid:true,token_id:decode.user_id
+            tokenIsValid:true,user_id:decode.user_id
         };
     };
 

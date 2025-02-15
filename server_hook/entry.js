@@ -1,7 +1,10 @@
 import login_new from "./services/new_user_login.js";
 import login_old from "./services/old_user_login.js";
+import login_sessionless from ""
 import get_profile from "./services/user_profile.js";
 import dcl from "./global_dcl/dcl.js";
+
+import axios from "axios";
 
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -20,6 +23,10 @@ class entry{
 
     logAs_old(payload){
         return this.old_user_log(payload)
+    }
+
+    logAs_temp(){
+
     }
 
     get_prof(){
@@ -42,6 +49,8 @@ dev_entry.logAs_new(payload).then(async (response) => {
     
     await new Promise(resolve => setTimeout(resolve, 5000));
     
+    console.log(dcl.authToken);
+
     dev_entry.get_prof().then(response => {
         console.log("response from the server - ", response);
     });

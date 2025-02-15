@@ -2,7 +2,11 @@ import express from "express";
 
 const get_profile=async(req,res)=>{
 
-    return res.json("nigga get the fuck outta here");
+    console.log("Request Headers:", req.headers);
+    console.log("Request Cookies:", req.cookies);
+    console.log("Authorization:", req.headers.authorization);
+
+    return res.json("try text");
 
 };
 

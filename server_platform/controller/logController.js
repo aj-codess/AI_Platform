@@ -1,13 +1,13 @@
 import cookie from 'cookie';
 import express from "express";
 import log_service from '../service/logService.js';
+import sessionless_controller from './sessionless_controller.js';
 
 
 const cookieOptions = {
     httpOnly: true, 
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'Strict',
-    maxAge: 24 * 60 * 60 * 1000,
 };
 
 
@@ -31,8 +31,7 @@ const new_log_control = async (req, res) => {
             return res.json({
                 email: log_mail_checks,
                 password: log_pass_checks,
-                message: 'Authentication successful',
-                user_id: user_id
+                message: 'Authentication successful'
             });
 
     
@@ -66,7 +65,7 @@ const old_log_control= async (req,res)=>{
 
         res.cookie('auth_token', token, cookieOptions);
 
-        return res.json({isLoggedIn:true,user_id});
+        return res.json({isLoggedIn:true});
 
     } else{
 
@@ -77,7 +76,47 @@ const old_log_control= async (req,res)=>{
 };
 
 
+
+const sessionless = async (req,res)=>{
+
+    try{
+        const authHeader = req.headers.authorization;
+
+        const deviceFromHeader = authHeader && authHeader.startsWith("os ") ? authHeader.split(" ")[1] : null;
+    
+        const temp_id=log_service.gen_id();
+
+        const token = await log_service.sign_token(temp_id);
+
+        const session_isCreated=sessionless_controller.create_session(temp_id,deviceFromHeader);
+
+        if(session_isCreated){
+            res.cookie('auth_token', token, cookieOptions);
+
+            return res.json({
+                message: 'Temporary Session successful'
+            });
+        } else{
+
+            return res.json({
+                message:"Unable to create Temporary Session"
+            })
+
+        }
+
+    } catch(error){
+
+        console.error('Error during token creation:', error);
+
+        return res.status(500).json({ error: 'Internal Server Error' });
+
+    }
+
+};
+
+
 export default {
     new_log_control,
-    old_log_control
+    old_log_control,
+    sessionless
   };

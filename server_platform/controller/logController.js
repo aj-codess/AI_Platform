@@ -80,6 +80,13 @@ const old_log_control= async (req,res)=>{
 const sessionless = async (req,res)=>{
 
     try{
+        const cookieOptions = {
+            httpOnly: true, 
+            secure: true,
+            sameSite: 'Strict',
+            maxAge: 10800000
+        };
+
         const authHeader = req.headers.authorization;
 
         const deviceFromHeader = authHeader && authHeader.startsWith("os ") ? authHeader.split(" ")[1] : null;

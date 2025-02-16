@@ -3,6 +3,11 @@ import login_old from "./services/old_user_login.js";
 import temp_session from "./services/login_sessionless.js";
 import get_profile from "./services/user_profile.js";
 import dcl from "./global_dcl/dcl.js";
+import system_settings from "./services/system_settings.js";
+import make_admin from "./services/make_admin.js";
+import remove_admin from "./services/remove_admin.js";
+import close_community from "./services/close_com.js";
+import caller from "./services/caller.js";
 
 import axios from "axios";
 
@@ -15,6 +20,11 @@ class entry{
         this.old_user_log=login_old;
         this.profile=get_profile;
         this.log_temp_session=temp_session;
+        this.makeAdmin=make_admin;
+        this.settings=system_settings;
+        this.remove=remove_admin;
+        this.close=close_community;
+        this.trigger=caller;
     }
 
     logAs_new(payload){
@@ -33,6 +43,24 @@ class entry{
     get_prof(){
         return this.profile();
     }
+
+    async makeAdm(payload){
+        return await this.makeAdmin(payload);
+    }
+
+    //payload {viaToken:(bool),open_community:(bool),allow_submembers_chat:(bool),adm_AI_queryOnly:(bool)};
+    async com_settings(payload){
+        return await this.settings(payload);
+    }
+
+    async removeAdm(payload){
+        return await this.makeAdmin(payload);
+    }
+
+    async closeCom(){
+        return await this.close();
+    }
+
 
 };
 

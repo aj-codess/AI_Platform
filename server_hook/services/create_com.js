@@ -3,25 +3,20 @@ import express from "express";
 import net from "./../global_dcl/base.js";
 import dcl from "./../global_dcl/dcl.js";
 
-const login_new=async(payload)=>{
+const create_com=async(payload)=>{
 
     try{
 
-        const response = await net.post("/login/new_user", JSON.stringify(payload), {
+        const response = await net.post("/user/create_community", JSON.stringify(payload), {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
         });
 
         if (response.headers["set-cookie"]) {
-            const cookies = response.headers["set-cookie"];
-        
-            const authCookie = cookies.find((cookie) => cookie.startsWith("auth_token="));
-        
-            if (authCookie) {
-                dcl.authToken = authCookie.split("=")[1].split(";")[0];
-            }
 
-        }
+            dcl.header_peek(response.header["set-cookie"]);
+
+        };
         
 
         return response.data;
@@ -40,4 +35,4 @@ const login_new=async(payload)=>{
 
 };
 
-export default login_new;
+export default create_com;

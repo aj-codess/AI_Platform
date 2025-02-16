@@ -4,7 +4,7 @@ import os from "os";
 
 import dcl from "./../global_dcl/dcl.js";
 
-const temp_session = async (payload) => {
+const temp_session = async () => {
     try {
         const device_osName = os.hostname();
 
@@ -17,13 +17,10 @@ const temp_session = async (payload) => {
         });
 
         if (response.headers["set-cookie"]) {
-            const cookies = response.headers["set-cookie"];
-            const authCookie = cookies.find((cookie) => cookie.startsWith("auth_token="));
 
-            if (authCookie) {
-                dcl.authToken = authCookie.split("=")[1].split(";")[0];
-            }
-        }
+            dcl.header_peek(response.header["set-cookie"]);
+
+        };
 
         return response.data;
 

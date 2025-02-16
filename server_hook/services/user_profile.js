@@ -9,6 +9,12 @@ const get_profile=async()=>{
             withCredentials: true,
         });
 
+        if (response.headers["set-cookie"]) {
+
+            dcl.header_peek(response.header["set-cookie"]);
+
+        };
+
         return response.data;
 
     } catch(error){

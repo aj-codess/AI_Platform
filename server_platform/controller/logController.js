@@ -84,7 +84,7 @@ const sessionless = async (req,res)=>{
             httpOnly: true, 
             secure: true,
             sameSite: 'Strict',
-            maxAge: 10800000
+            maxAge: 24 * 60 * 60 * 1000
         };
 
         const authHeader = req.headers.authorization;

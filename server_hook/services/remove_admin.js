@@ -1,11 +1,13 @@
+import express from "express";
+
 import net from "./../global_dcl/base.js";
 import dcl from "./../global_dcl/dcl.js";
 
-const login_old=async(payload)=>{
+const remove_admin=async(payload)=>{
 
     try{
 
-        const response = await net.post("/login/old_user", JSON.stringify(payload), {
+        const response = await net.post("/community/remove_admin", JSON.stringify(payload), {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
         });
@@ -13,22 +15,23 @@ const login_old=async(payload)=>{
         if (response.headers["set-cookie"]) {
 
             dcl.header_peek(response.header["set-cookie"]);
-            
+
         };
 
         return response.data;
 
     } catch(error){
-        
+
         console.error({
             message: error.message,
             name: error.name,
             stack: error.stack,
-        })
+          });
 
-    };
+          return null;
+
+    }
 
 };
 
-
-export default login_old;
+export default remove_admin;

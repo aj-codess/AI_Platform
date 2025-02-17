@@ -3,6 +3,8 @@ import express from "express";
 import log_service from '../service/logService.js';
 import sessionless_controller from './sessionless_controller.js';
 
+import user from "./../models/user_schema.js";
+
 
 const cookieOptions = {
     httpOnly: true, 
@@ -22,7 +24,20 @@ const new_log_control = async (req, res) => {
 
     if (log_mail_checks.isValid !== false && log_pass_checks.isValid !== false) {
         try {
-            const user_id = log_service.gen_id(email,password,name);
+
+            const password_crypto=log_service.pass_crypto(password);
+
+            const user_id = log_service.gen_id();
+
+            const new_user=new user({
+                _id:user_id,
+                userName:name,
+                email:email,
+                phone:phone,
+                password:password_crypto,
+            });
+
+            await new_user.save();
     
             const token = await log_service.sign_token(user_id);
     
@@ -59,9 +74,17 @@ const old_log_control= async (req,res)=>{
     
     if(mail_check == true && pass_check == true){
 
-        const user_id=log_service.get_id_from_db(email);
+        const password_crypto=log_service.pass_crypto(password);
 
-        const token = await log_service.sign_token(user_id);
+        const user=await user.findOne({email});
+
+        if(!user || !(await user.matchPassword(password_crypto))){
+
+            return res.status(401).json({ isLoggedIn: false});
+
+        };
+
+        const token = await log_service.sign_token(user._id);
 
         res.cookie('auth_token', token, cookieOptions);
 

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from 'express';
 import cookieParser from "cookie-parser";
+import connectDB from "./config/db.js";
 
 import log_router from "./routes/login_routes.js";
 import auth_router from "./middleware/auth_reader.js";
@@ -8,6 +9,8 @@ import user_router from "./routes/user_routes.js";
 import community_settings_router from "./routes/community_settings_routes.js"
 
 dotenv.config();
+
+connectDB();
 
 const app=express();
 

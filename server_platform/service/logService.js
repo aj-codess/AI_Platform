@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken'
 import generateUniqueId from 'generate-unique-id'
 import * as crypto from "crypto";
 
-let id_array=[];
-
 const saltRounds=10;
 
 const mail_checks=(email)=>{
@@ -69,60 +67,32 @@ const pass_checks=(password)=>{
 
 
 
-const mail_isExist=(email)=>{
+const pass_crypto=(password)=>{
 
-  for(let i=0;i<id_array.length;i++){
-    if(id_array[i].email==email){
-      return true
-    }
-  };
+  try{
 
-  return false;
+    const salt = bcrypt.genSaltSync(saltRounds);
+  
+    const pass_hash = bcrypt.hashSync(password, salt);
+  
+    return pass_hash;
 
-};
+  } catch(error){
 
+    console.error("unabe to hash password: ",error.message);
 
-
-const pass_isExist=(password)=>{
-
-  const salt = bcrypt.genSaltSync(saltRounds);
-  const pass_hash = bcrypt.hashSync(password, salt);
-
-  //load hash from db
-  db_hash;
-
-  if(pass_hash==db_hash){
-
-    return true;
-
-  } else{
-
-    return false;
-
-  };
-
-  for(let i=0;i<id_array.length;i++){
-    if(id_array[i].password==password){
-      return true
-    }
   }
 
-  return false;
-
 };
 
 
-const gen_id=(email,password,name)=>{
+const gen_id=()=>{
 
   const id = generateUniqueId({
     includeSymbols: ['@','#','|'],
     excludeSymbols: ['0'],
     length:15
   });
-
-  if(email && password){
-    id_array.push({email:email,user_id:id,password:password,username:name});
-  }
 
     return id;
 };
@@ -174,52 +144,13 @@ const verify_token = async (token) => {
   });
 };
 
-
-const id_verify = (id) =>{
-
-  for(let i=0;i<id_array.length;i++){
-      if(id_array[i].user_id==id){
-        return true;
-      }
-  }
-  return false;
-};
-
-
-const get_id_from_db=(email)=>{
-
-  for(let i=0;i<id_array.length;i++){
-
-    if(id_array[i].email == email){
-      return id_array[i].user_id;
-    };
-
-  };
-
-};
-
-
-const get_name=(id)=>{
-
-  for(let i=0;i<id_array.length;i++){
-    if(id_array[i].user_id==id){
-      return id_array[i].username;
-    }
-  }
-
-};
-
   
   export default {
     mail_checks,
     pass_checks,
-    mail_isExist,
-    pass_isExist,
     gen_id,
     sign_token,
     verify_token,
-    get_id_from_db,
-    id_verify,
-    get_name
+    pass_crypto
   };
   

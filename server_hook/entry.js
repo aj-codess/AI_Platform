@@ -1,64 +1,142 @@
-import login_new from "./services/new_user_login.js";
-import login_old from "./services/old_user_login.js";
 import temp_session from "./services/login_sessionless.js";
-import get_profile from "./services/user_profile.js";
-import dcl from "./global_dcl/dcl.js";
-import system_settings from "./services/system_settings.js";
-import make_admin from "./services/make_admin.js";
-import remove_admin from "./services/remove_admin.js";
-import close_community from "./services/close_com.js";
 import caller from "./services/caller.js";
 
-import axios from "axios";
 
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+let url;
 
 class entry{
     constructor(){
-        this.new_user_log=login_new;
-        this.old_user_log=login_old;
-        this.profile=get_profile;
         this.log_temp_session=temp_session;
-        this.makeAdmin=make_admin;
-        this.settings=system_settings;
-        this.remove=remove_admin;
-        this.close=close_community;
         this.trigger=caller;
     }
 
-    logAs_new(payload){
-        return this.new_user_log(payload);
+    async logAs_new(payload){
+        
+        url="/login/new_user";
+
+        return await this.trigger("post", url, payload);
+
     }
 
 
-    logAs_old(payload){
-        return this.old_user_log(payload);
+    async logAs_old(payload){
+
+        url="/login/old_user";
+
+        return await this.trigger("post",url,payload);
+
     }
 
     async logAs_temp(){
-        return await this.log_temp_session();
-    }
 
-    get_prof(){
-        return this.profile();
+        url="/login/sessionless";
+
+        return await this.log_temp_session("get",url,{});
+
+    };
+
+
+    async get_prof(){
+
+        url="/user/profile";
+
+        return await this.trigger("get",url,{});
+
     }
 
     async makeAdm(payload){
-        return await this.makeAdmin(payload);
+
+        url="/community/make_admin";
+
+        return await this.trigger("post",url,payload);
+
     }
 
     //payload {viaToken:(bool),open_community:(bool),allow_submembers_chat:(bool),adm_AI_queryOnly:(bool)};
     async com_settings(payload){
-        return await this.settings(payload);
+
+        url="/community/system_settings";
+
+        return await this.trigger("post",url,payload);
+
     }
 
     async removeAdm(payload){
-        return await this.makeAdmin(payload);
+
+        url="/community/remove_admin";
+
+        return await this.trigger("post",url,payload);
+
     }
 
-    async closeCom(){
-        return await this.close();
+    async closeCom(payload){
+
+        url="/community/close_community";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+
+    async removeUser(payload){
+
+        url="/community/remove_user";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+
+    async createCom(payload){
+
+        url="/user/create_community";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+
+    async joinCom(payload){
+
+        url="/user/join_community";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+
+    async leaveCom(payload){
+
+        url="/user/leave_community";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+    async reportCom(payload){
+
+        url="/user/report_community";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+
+    async submembers(payload){
+
+        url="/user/community_submembers";
+
+        return await this.trigger("get",url,payload);
+
+    }
+
+
+    async getAdm(payload){
+
+        url="/user/get_admins";
+
+        return await this.trigger("get",url,payload);
+
     }
 
 

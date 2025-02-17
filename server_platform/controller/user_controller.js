@@ -1,16 +1,52 @@
-import express from "express";
 
-const get_profile=async(req,res)=>{
 
-    console.log("Request Headers:", req.headers);
-    console.log("Request Cookies:", req.cookies);
-    console.log("Authorization:", req.headers.authorization);
+const get_profile=(req,res)=>{
 
-    return res.json("try text");
+    let profile_payload;
+
+    //get data from db where user id is req.id
+
+    return profile_payload;
 
 };
 
 
+const createCom=(req,res)=>{
+
+}
+
+
+const joinCom=(req,res)=>{
+
+}
+
+
+const leaveCom=(req,res)=>{
+
+}
+
+
+const reportCom=(req,res)=>{
+
+}
+
+
+const comSubmembers=(req,res)=>{
+
+}
+
+
+const getAdm=(req,res)=>{
+
+}
+
+
 export default {
-    get_profile
+    get_profile,
+    createCom,
+    joinCom,
+    leaveCom,
+    reportCom,
+    comSubmembers,
+    getAdm,
 };

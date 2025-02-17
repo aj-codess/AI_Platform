@@ -47,56 +47,57 @@ const auth_peek=(response)=>{
 
     if (response.headers["set-cookie"]) {
 
-        dcl.header_peek(response.header["set-cookie"]);
+        dcl.header_peek(response.headers["set-cookie"]);
 
     };
 
 }
 
 
-const caller=async(method,url,payload)=>{
-
-    try{
-
+const caller = async (method, url, payload) => {
+    try {
         let response;
 
-        switch(method){
+        switch (method) {
             case "post":
-                response=await post_req(url,payload);
 
-                auth_peek(response);
-
-            break;
+                response = await post_req(url, payload);
+                
+                break;
 
             case "get":
-                response=await post_req(url,payload);
 
-                auth_peak(response);
-
-            break;
+                response = await get_req(url, payload);
+                
+                break;
 
             case "delete":
-                response=await delete_req(url,payload);
+                
+                response = await delete_req(url, payload);
 
-                auth_peak(response);
+                break;
 
-            break;
+            default:
+                throw new Error("Unsupported method");
         }
 
+        auth_peek(response);
         return response.data;
 
-    } catch(error){
+    } catch (error) {
 
         console.error({
             message: error.message,
             name: error.name,
             stack: error.stack,
-          });
 
-          return null;
+        });
+
+
+        return null;
 
     }
-
+    
 };
 
 export default caller;

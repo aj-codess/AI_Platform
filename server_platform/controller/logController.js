@@ -30,7 +30,7 @@ const new_log_control = async (req, res) => {
             const user_id = log_service.gen_id();
 
             const new_user=new user({
-                _id:user_id,
+                id:user_id,
                 userName:name,
                 email:email,
                 phone:phone,
@@ -68,23 +68,21 @@ const old_log_control= async (req,res)=>{
 
     const {email,password}=req.body;
 
-    let mail_check=log_service.mail_isExist(email);
+    let mail_valid=log_service.mail_checks(email);
 
-    let pass_check=log_service.pass_isExist(password);
+    let pass_valid=log_service.pass_checks(password);
     
-    if(mail_check == true && pass_check == true){
+    if(mail_valid.isValid !== false && pass_valid.isValid !== false){
 
-        const password_crypto=log_service.pass_crypto(password);
+        const user_data=await user.findOne({email});
 
-        const user=await user.findOne({email});
-
-        if(!user || !(await user.matchPassword(password_crypto))){
+        if(!user_data || !(await user_data.matchPassword(password))){
 
             return res.status(401).json({ isLoggedIn: false});
 
         };
 
-        const token = await log_service.sign_token(user._id);
+        const token = await log_service.sign_token(user_data.id);
 
         res.cookie('auth_token', token, cookieOptions);
 

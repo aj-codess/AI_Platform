@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 // Define User Schema
 const userSchema = new mongoose.Schema(
     {
-        _id:{
-            type:string,
+        id:{
+            type: String,
             required:true,
             unique:true,
         },
@@ -17,13 +18,12 @@ const userSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
-            unique: true,
             lowercase: true,
             trim: true,
             match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         },
         phone:{
-            type:string,
+            type: String,
             required:false,
             minlength:10,
             maxlength:13,
@@ -45,7 +45,14 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Create User Model
-const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+userSchema.methods.matchPassword = async function (enteredPassword) {
+
+    return await bcrypt.compare(enteredPassword, this.password);
+
+};
+
+// Create User Model
+const user = mongoose.model("User", userSchema);
+
+export default user;

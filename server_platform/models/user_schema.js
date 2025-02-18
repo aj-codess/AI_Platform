@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
+    owned_communities: [{
+        community_id: { type: String ,required:true}, // Custom reference ID
+        name:{type: String},
+        community_token: { type: String, required: true }
+    }],
     isActive: {
         type: Boolean,
         default: true,

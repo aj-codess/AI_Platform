@@ -26,10 +26,16 @@ const remove_user=(req,res)=>{
 }
 
 
+const acceptFrom_awaiting=(req,res)=>{
+
+}
+
+
 export default {
     system_settings,
     make_admin,
     remove_admin,
     close_community,
-    remove_user
+    remove_user,
+    acceptFrom_awaiting
 }

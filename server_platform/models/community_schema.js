@@ -11,7 +11,8 @@ const communitySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique:true
     },
     role: {
         type: String,
@@ -46,7 +47,8 @@ const communitySchema = new mongoose.Schema({
         timestamp: { type: Date }
     }],
     submembers: [{
-        type: String // Custom user ID instead of ObjectId
+        type: String, // Custom user ID instead of ObjectId
+        unique:true
     }],
     owner_id: {
         type: String, // Custom owner ID instead of ObjectId
@@ -57,16 +59,15 @@ const communitySchema = new mongoose.Schema({
     }],
     community_token: {
         type: String,
-        unique: true
+        unique: true,
+        required:true
     },
     settings: {
-        allow_token_invites: { type: Boolean, default: true },
         open_community: { type: Boolean, default: true },
         allow_submembers_chat: { type: Boolean, default: true },
         admin_AI_queryOnly: { type: Boolean, default: false }
     }
 }, { timestamps: true });
-
 
 
 const community = mongoose.model('Community', communitySchema);

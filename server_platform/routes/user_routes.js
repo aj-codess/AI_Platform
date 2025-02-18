@@ -15,9 +15,10 @@ user_router.post("/report_community",(req, res) => user_control.reportCom(req,re
 
 user_router.get("/community_submembers",(req, res) => user_control.comSubmembers(req,res));
 
-user_router.get("/get_admins",(req, res) => user_control.getAdm(req,res));
+user_router.get("/get_awaiting",(req, res) => user_control.getAdm(req,res));
 
 //this will upgrade to a websocket
+// community name and community token is required
 user_router.post("/open_community",(req, res) => user_control);
 
 export default user_router;

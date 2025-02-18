@@ -131,7 +131,7 @@ class entry{
     }
 
 
-    async getAdm(payload){
+    async getAwaiting(payload){
 
         url="/user/get_admins";
 

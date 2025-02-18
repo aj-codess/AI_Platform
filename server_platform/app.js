@@ -6,7 +6,10 @@ import connectDB from "./config/db.js";
 import log_router from "./routes/login_routes.js";
 import auth_router from "./middleware/auth_reader.js";
 import user_router from "./routes/user_routes.js";
-import community_settings_router from "./routes/community_settings_routes.js"
+import community_settings_router from "./routes/community_settings_routes.js";
+
+import user_schema from "./models/user_schema.js";
+import community from "./models/community_schema.js";
 
 dotenv.config();
 

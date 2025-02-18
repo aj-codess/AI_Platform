@@ -1,10 +1,10 @@
-import session from "./../service/session.js";
+import session_handler from "./../service/session.js";
 
 const create_session=(user_id,user_os)=>{
 
     try{
 
-        return session.create(user_id,user_os);
+        return session_handler.create(user_id,user_os);
 
     } catch(error){
 
@@ -21,7 +21,7 @@ const create_session=(user_id,user_os)=>{
 const delete_session=(user_id)=>{
     try{
 
-        return session.delete_session(user_id);
+        return session_handler.delete_session(user_id);
 
     } catch(error){
 
@@ -36,15 +36,18 @@ const delete_session=(user_id)=>{
 
 const update_lastSigned=(user_id)=>{
 
-    return session.update_last_signed(user_id);
+    return session_handler.update_last_signed(user_id);
 
 }
 
 const idIsIn_session=(user_id)=>{
 
-    return session.idIsIn_session(user_id);
+    return session_handler.isValid(user_id);
 
 }
+
+
+//make a mechanism which runs after every 3hrs deleting unaccesses sessions
 
 export default {
     create_session,

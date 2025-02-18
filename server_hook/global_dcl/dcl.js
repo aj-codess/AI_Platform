@@ -1,19 +1,5 @@
-
-let authToken=null;
-
-let gmail=null;
-
-let header_peek=(cookie)=>{
-
-    const authCookie = cookie.find((cookie) => cookie.startsWith("auth_token="));
-        
-    if (authCookie) {
-        authToken = authCookie.split("=")[1].split(";")[0];
-    };
-    
+let authToken={
+    token:null
 }
 
-export default {
-    authToken,
-    header_peek
-}
+export default authToken;

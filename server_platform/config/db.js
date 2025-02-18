@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import user_schema from "./../models/user_schema.js";
+import community_schema from "./../models/community_schema.js";
+
 dotenv.config();
 
 const connectDB=async()=>{

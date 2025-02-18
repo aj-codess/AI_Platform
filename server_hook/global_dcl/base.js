@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import dcl from "./dcl.js";
+import authToken from "./dcl.js";
 
 const net=axios.create({
     baseURL:"http://localhost:3000",
@@ -15,7 +15,7 @@ const net=axios.create({
 
 net.interceptors.request.use((config)=>{
 
-        config.headers["Authorization"]=`Bearer ${dcl.authToken}`;
+        config.headers["Authorization"]=`Bearer ${authToken.token}`;
 
         return config;
 

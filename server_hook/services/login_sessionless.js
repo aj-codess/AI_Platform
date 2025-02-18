@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 import os from "os";
 
-import dcl from "./../global_dcl/dcl.js";
+import header_peek from "./../global_dcl/peek_module.js";
 
 const temp_session = async () => {
     try {
@@ -18,7 +18,7 @@ const temp_session = async () => {
 
         if (response.headers["set-cookie"]) {
 
-            dcl.header_peek(response.header["set-cookie"]);
+            header_peek(response.header["set-cookie"]);
 
         };
 

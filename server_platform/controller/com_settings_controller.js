@@ -1,3 +1,5 @@
+import user_schema from "./../models/user_schema.js";
+import community_schema from "./../models/community_schema.js";
 
 const system_settings=(req,res)=>{
 

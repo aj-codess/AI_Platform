@@ -140,20 +140,39 @@ class entry{
     }
 
 
+    async delete_session(){
+
+        url="/login/remove_session";
+
+        return await this.trigger("post",url,{});
+
+    }
+
+
 };
 
 
 const payload = {
     email: "jgyei339@gmail.com",
     password: "C%ry9to_2_g3t",
-    // name:"aj-codess",
-    // phone:"0207924832"
+    name:"aj-codess",
+    phone:"0207924832"
 };
 
 const dev_entry = new entry();
 
-dev_entry.logAs_old(payload).then((response)=>{
-    console.log("login Response :",response);
-}).catch((error)=>{
-    console.error("error: ",error);
-})
+dev_entry.logAs_new(payload).then((response) => {
+    console.log("login Response :", response);
+
+    setTimeout(() => {
+        console.log("Waited for 5 seconds");
+
+        dev_entry.get_prof().then((response) => {
+            console.log("profile: ", response);
+        });
+
+    }, 5000);
+
+}).catch((error) => {
+    console.error("error: ", error);
+});

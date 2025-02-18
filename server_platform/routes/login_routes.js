@@ -9,4 +9,6 @@ log_router.post("/old_user",(req,res)=> log_control.old_log_control(req,res));
 
 log_router.get("/sessionless",(req,res)=>log_control.sessionless(req,res));
 
+log_router.post("/remove_session",(req,res)=>log_control.remove_session(req,res));
+
 export default log_router;

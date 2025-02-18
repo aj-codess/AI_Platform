@@ -3,7 +3,7 @@ import express from "express";
 import log_service from '../service/logService.js';
 import sessionless_controller from './sessionless_controller.js';
 
-import user from "./../models/user_schema.js";
+import user_schema from "./../models/user_schema.js";
 
 
 const cookieOptions = {
@@ -29,7 +29,7 @@ const new_log_control = async (req, res) => {
 
             const user_id = log_service.gen_id();
 
-            const new_user=new user({
+            const new_user=new user_schema({
                 id:user_id,
                 userName:name,
                 email:email,
@@ -46,7 +46,7 @@ const new_log_control = async (req, res) => {
             return res.json({
                 email: log_mail_checks,
                 password: log_pass_checks,
-                message: 'Authentication successful'
+                message: 'Authentication successful',
             });
 
     
@@ -74,7 +74,7 @@ const old_log_control= async (req,res)=>{
     
     if(mail_valid.isValid !== false && pass_valid.isValid !== false){
 
-        const user_data=await user.findOne({email});
+        const user_data=await user_schema.findOne({email});
 
         if(!user_data || !(await user_data.matchPassword(password))){
 
@@ -101,12 +101,6 @@ const old_log_control= async (req,res)=>{
 const sessionless = async (req,res)=>{
 
     try{
-        const cookieOptions = {
-            httpOnly: true, 
-            secure: true,
-            sameSite: 'Strict',
-            maxAge: 24 * 60 * 60 * 1000
-        };
 
         const authHeader = req.headers.authorization;
 
@@ -143,8 +137,32 @@ const sessionless = async (req,res)=>{
 };
 
 
+
+const remove_session=async()=>{
+    try{
+
+        if(sessionless_controller.idIsIn_session(user_id)){
+
+            sessionless_controller.delete_session(user_id);
+            
+            return res.status(200).json({message:"Temporary Session Deleted."})
+        };
+
+    } catch(error){
+
+        console.error('Error During Session Deletion :', error);
+
+        return res.status(500).json({ error: 'Internal Server Error' });
+
+    };
+
+};
+
+
+
 export default {
     new_log_control,
     old_log_control,
-    sessionless
+    sessionless,
+    remove_session
   };

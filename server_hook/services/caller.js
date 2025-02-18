@@ -1,7 +1,8 @@
 import express from "express";
 
 import net from "./../global_dcl/base.js";
-import dcl from "./../global_dcl/dcl.js";
+import header_peek from "./../global_dcl/peek_module.js";
+import authToken from "../global_dcl/dcl.js";
 
 
 
@@ -18,15 +19,14 @@ const post_req=async(url,payload)=>{
 
 
 
-const get_req=async(url,payload)=>{
-
-    const response = await net.post(`${url}`, JSON.stringify(payload), {
+const get_req = async (url, payload) => {
+    const response = await net.get(url, {
+        params: payload, 
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
     });
 
     return response;
-
 };
 
 
@@ -47,7 +47,7 @@ const auth_peek=(response)=>{
 
     if (response.headers["set-cookie"]) {
 
-        dcl.header_peek(response.headers["set-cookie"]);
+        header_peek(response.headers["set-cookie"]);
 
     };
 
@@ -82,6 +82,7 @@ const caller = async (method, url, payload) => {
         }
 
         auth_peek(response);
+        
         return response.data;
 
     } catch (error) {

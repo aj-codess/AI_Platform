@@ -78,14 +78,16 @@ class container{
         return this.session.get(key).last_signed;
     }
 
-    isValid(key,os){
+    isValid(key){
 
-        if(this.tempUser_isExist(key) && this.get_os(key) == os){
+        if(this.tempUser_isExist(key)){
 
             if((this.get_last_signed(key) - new Date()) >= three_hours_ms){
 
                 return false;
 
+            } else{
+                return true;
             };
 
         } else{

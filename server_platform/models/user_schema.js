@@ -37,6 +37,19 @@ const userSchema = new mongoose.Schema({
         name:{type: String},
         community_token: { type: String, required: true }
     }],
+    chat_queue: {
+        type: [{
+            id: { type: String, required: true },
+            name: { type: String, required: true },
+            message_queue: [{
+                id:{type:String,required:true},
+                timestamp:{type:Date,default:Date.now},
+                message:{type:String,required:true}
+            }],
+            default:[]
+        }],
+        default: []
+    },
     isActive: {
         type: Boolean,
         default: true,

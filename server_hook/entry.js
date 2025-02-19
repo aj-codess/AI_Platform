@@ -87,6 +87,15 @@ class entry{
     }
 
 
+    async acceptFrom_awaiting(payload){
+
+        url="/community/accept";
+
+        return await this.trigger("post",url,payload);
+
+    }
+
+
     async createCom(payload){
 
         url="/user/create_community";
@@ -133,7 +142,7 @@ class entry{
 
     async getAwaiting(payload){
 
-        url="/user/get_admins";
+        url="/user/get_awaiting";
 
         return await this.trigger("get",url,payload);
 

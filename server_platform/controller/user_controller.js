@@ -62,18 +62,40 @@ const createCom=async(req,res)=>{
             community_token:token
         };
 
-        await new_community.save();
+        const comIsSaved=await new_community.save();
 
-        const created_com=await user_schema.findOneAndUpdate(
+        const isSaved_ref=await user_schema.findOneAndUpdate(
             {id:id},
             {$addToSet:{owned_communities:ref}},
             {new:true}
         );
 
-        return res.status(200).json({
-            message:"community Created",
-            community_data:created_com
-        });
+        if(comIsSaved && !isSaved_ref){
+
+            return res.status(500).json({message:"Internal server Error Re-create community"});
+
+        } else if(!comIsSaved && isSaved_ref){
+
+            const isRemoved=await user_schema.findOneAndUpdate(
+                {id:id},
+                {
+                    $pull:{"owned_communities":com_id}
+                },
+                {new:true}
+            );
+
+            if(isRemoved){
+                return res.status(500).json({message:"Internal server Error Re-create community"});
+            }
+
+        } else if(comIsSaved && isSaved_ref){
+
+            return res.status(200).json({
+                message:"community Created",
+                community_data:created_com
+            });
+
+        };
 
     } catch(error){
 
@@ -104,30 +126,34 @@ const joinCom=async(req,res)=>{
 
                 if(community_data.settings.open_community==true){
 
-                    await community_schema.findOneAndUpdate(
+                    const isAdded=await community_schema.findOneAndUpdate(
                         {name,name},
                         {$addToSet:{submembers:id}},
-                        {new:false}
+                        {new:true}
                     );
 
-                    return res.status(200).json({
-                        messageFrom_system:"Token Matches",
-                        messageFrom_community:`welcome to ${name}`
-                    });
+                    if(isAdded){
+                        return res.status(200).json({
+                            messageFrom_system:"Token Matches",
+                            messageFrom_community:`welcome to ${name}`
+                        });
+                    }
 //send to the client essentials to connect to the websocket - which is the community id,name and token
 //it is the id which will be used for the socket
                 } else{
 
-                    await community_schema.findOneAndUpdate(
+                    const isAdded=await community_schema.findOneAndUpdate(
                         {name:name},
                         {$addToSet:{awaiting_submembers:id}},
                         {new:false}
                     );
 
-                    return res.status(200).json({
-                        messageFrom_system:"Token Matches",
-                        messageFrom_community:"In Awaiting Room. Admin will Add you soon"
-                    });
+                    if(isAdded){
+                        return res.status(200).json({
+                            messageFrom_system:"Token Matches",
+                            messageFrom_community:"In Awaiting Room. Admin will Add you soon"
+                        });
+                    }
 
                 };
 
@@ -167,12 +193,16 @@ const leaveCom=async(req,res)=>{
 
             if(community_data.submembers.includes(id)){
 
-                await community_schema.findOneAndUpdate(
+                const isRemoved=await community_schema.findOneAndUpdate(
                     {community_id:id},
-                    {$pull:{submembers:id}}
+                    {$pull:{submembers:id}},
+                    {new:true}
                 );
 
-                return res.status(200).json({message:"Removed From Community"});
+                if(isRemoved){
+                    return res.status(200).json({message:"Removed From Community"});
+                }
+
             };
 
         } else{

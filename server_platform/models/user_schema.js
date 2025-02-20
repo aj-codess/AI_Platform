@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 
 const userSchema = new mongoose.Schema({
+    _id:false,
     id:{
         type: String,
         required: true,
@@ -33,15 +34,18 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
     },
     owned_communities: [{
+        _id:false,
         community_id: { type: String ,required:true}, // Custom reference ID
         name:{type: String},
         community_token: { type: String, required: true }
     }],
     chat_queue: {
         type: [{
+            _id:false,
             id: { type: String, required: true },
             name: { type: String, required: true },
             message_queue: [{
+                _id:false,
                 id:{type:String,required:true},
                 timestamp:{type:Date,default:Date.now},
                 message:{type:String,required:true}
@@ -54,11 +58,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-}, { timestamps: true });
+}, { timestamps: true});
 
 
 

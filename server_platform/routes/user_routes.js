@@ -19,8 +19,8 @@ user_router.get("/get_awaiting",(req, res) => user_control.getAdm(req,res));
 
 //this will upgrade to a websocket
 // community name and community token is required
-user_router.post("/open_community",(req, res) => user_control);
+user_router.post("/community_chat",(req, res) => user_control);
 
-user_router.post("/open_chat",(req,res)=>user_control)
+user_router.post("/chat",(req,res)=>user_control)
 
 export default user_router;

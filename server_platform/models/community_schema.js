@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const communitySchema = new mongoose.Schema({
+    _id:false,
     community_id: {
         type: String,
         required: true,
@@ -23,6 +24,7 @@ const communitySchema = new mongoose.Schema({
     }],
     message_queue: {
         type: [{
+            _id:false,
             id: { type: String }, // Custom message ID
             forAI: { type: Boolean, default: false },
             sender: { type: String, required: true }, // Custom user ID
@@ -30,10 +32,12 @@ const communitySchema = new mongoose.Schema({
             timestamp: { type: Date, default: Date.now },
             forUser: [{ type: String }], // Array of custom user IDs
             seen_id: [{
+                _id:false,
                 id: { type: String }, // Custom user ID
                 timestamp: { type: Date, default: Date.now }
             }],
             replies: [{
+                _id:false,
                 id: { type: String }, // Custom reply ID
                 sender: { type: String, required: true }, // Custom user ID
                 message: { type: String, required: true },
@@ -43,6 +47,7 @@ const communitySchema = new mongoose.Schema({
         default: []
     },
     client_last_message_ref: [{
+        _id:false,
         id: { type: String }, // Custom reference ID
         timestamp: { type: Date }
     }],
@@ -55,7 +60,7 @@ const communitySchema = new mongoose.Schema({
         required: true
     },
     awaiting_submembers: [{
-        type: String // Custom user ID
+        type: String
     }],
     community_token: {
         type: String,

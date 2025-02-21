@@ -10,7 +10,7 @@ const create_chat = async (user_id, name) => {
 
         if (isExist) {
 
-            const chat_id = log_service.gen_id();
+            const chat_id = logService.gen_id();
 
             const isCreated = await user_schema.findOneAndUpdate(
                 { id: user_id },
@@ -123,7 +123,7 @@ const delete_message=async(user_id,chat_id,message_id)=>{
 
             return { status: "Error", message: "Message not found or could not be deleted" };
 
-        }else{
+
 
             return {status:"success",message:"Message Deleted"}
 
@@ -173,10 +173,80 @@ const chatMessage=async(user_id,chat_id)=>{
 
 
 
+const append_message=async(user_id,chat_id,message)=>{
 
-const make_chat=async(user_id,chat_id)=>{
+    try{
+
+        const message_toAppend={
+            message_id:logService.gen_id(),
+            message:message
+        };
+
+        const append=await user_schema.findOneAndUpdate(
+            {id:user_id,"chat_queue.chat_id":chat_id},
+            {
+                $push:{"chat_queue.$.message_queue":message_toAppend}
+            },
+            {new:true}
+        );
+
+        if(append){
+            return true;
+        };
+
+        return false;
+
+    } catch(error){
+
+        console.error("Error Appending Message: ",error);
+
+        return false;
+
+    };
+
+};
 
 
+
+const make_chat=async(user_id,chat_id,message)=>{
+
+    try{
+
+        const isUser=await user_schema.findOne({id:user_id});
+
+        if(!isUser){
+
+            return {status:"Error",message:"Not A User"};
+
+        };
+
+        const append=await append_message(user_id,chat_id,message);
+
+        if(append){
+            
+            let api_response;
+
+            if(api_response){
+
+                const response_isAppended=await append_message(user_id,chat_id,JSON.parse(api_response));
+
+                if(response_isAppended){
+
+                    return {status:"success",api_response};
+                    
+                }
+
+            };
+
+        };
+
+    } catch(error){
+
+        console.error("chat Error: ",error);
+
+        return {statis:"Error",message:"Internal Server Error"};
+
+    };
 
 };
 

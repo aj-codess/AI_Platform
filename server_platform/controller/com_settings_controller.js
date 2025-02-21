@@ -59,7 +59,7 @@ const make_admin=async(req,res)=>{
 
         const community_data=await community_schema.findOne({community_id:community_id});
 
-        if(community_data.owner_id==id || community_data.admins.includes(id)){
+        if((community_data.owner_id==id || community_data.admins.includes(id)) && community_data.submembers.includes(idTo_admin)){
 
             const isUpdated=await community_schema.findOneAndUpdate(
                 {community_id:community_id},
@@ -75,7 +75,7 @@ const make_admin=async(req,res)=>{
 
         } else{
 
-            return res.json({message:"Not an Admin"});
+            return res.json({message:"Not an Admin Or User Not in Community"});
 
         };
 

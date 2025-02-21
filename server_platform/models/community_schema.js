@@ -20,26 +20,27 @@ const communitySchema = new mongoose.Schema({
         trim: true
     },
     admins: [{
-        type: String // Custom user ID instead of ObjectId
+        type: String,
+        unique:true
     }],
     message_queue: {
         type: [{
             _id:false,
-            id: { type: String }, // Custom message ID
+            id: { type: String },
             forAI: { type: Boolean, default: false },
-            sender: { type: String, required: true }, // Custom user ID
+            sender: { type: String, required: true },
             message: { type: String, required: true },
             timestamp: { type: Date, default: Date.now },
-            forUser: [{ type: String }], // Array of custom user IDs
+            forUser: [{ type: String }],
             seen_id: [{
                 _id:false,
-                id: { type: String }, // Custom user ID
+                id: { type: String },
                 timestamp: { type: Date, default: Date.now }
             }],
             replies: [{
                 _id:false,
-                id: { type: String }, // Custom reply ID
-                sender: { type: String, required: true }, // Custom user ID
+                id: { type: String },
+                sender: { type: String, required: true },
                 message: { type: String, required: true },
                 timestamp: { type: Date, default: Date.now }
             }]
@@ -48,15 +49,15 @@ const communitySchema = new mongoose.Schema({
     },
     client_last_message_ref: [{
         _id:false,
-        id: { type: String }, // Custom reference ID
+        id: { type: String },
         timestamp: { type: Date }
     }],
     submembers: [{
-        type: String, // Custom user ID instead of ObjectId
+        type: String,
         unique:true
     }],
     owner_id: {
-        type: String, // Custom owner ID instead of ObjectId
+        type: String,
         required: true
     },
     awaiting_submembers: [{

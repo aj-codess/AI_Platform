@@ -179,6 +179,7 @@ const joinCom=async(req,res)=>{
 };
 
 
+
 const leaveCom=async(req,res)=>{
 
     try{
@@ -187,19 +188,27 @@ const leaveCom=async(req,res)=>{
 
         const {community_id,name}=req.body;
 
-        const community_data=await community_schema.findOne({community_id:id});
+        const community_data=await community_schema.findOne({community_id:community_id});
 
         if(community_data){
 
             if(community_data.submembers.includes(id)){
 
-                const isRemoved=await community_schema.findOneAndUpdate(
-                    {community_id:id},
+                const isRemovedFrom_sub=await community_schema.findOneAndUpdate(
+                    {community_id:community_id},
                     {$pull:{submembers:id}},
                     {new:true}
                 );
 
-                if(isRemoved){
+                const isRemovedFrom_admn=await community_schema.findOneAndUpdate(
+                    {community_id:community_id},
+                    {
+                        $pull:{admins:id}
+                    },
+                    {new:true}
+                );
+
+                if(isRemovedFrom_sub || isRemovedFrom_admn){
                     return res.status(200).json({message:"Removed From Community"});
                 }
 

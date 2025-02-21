@@ -47,8 +47,8 @@ const userSchema = new mongoose.Schema({
             message_queue: [{
                 _id:false,
                 message_id:{type:String,required:true},
-                timestamp:{type:Date,default:Date.now},
-                message:{type:String,required:true}
+                message:{type:String,required:true},
+                timestamp:{type:Date,default:Date.now}
             }],
             default:[]
         }],

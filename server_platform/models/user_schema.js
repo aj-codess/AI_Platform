@@ -35,18 +35,18 @@ const userSchema = new mongoose.Schema({
     },
     owned_communities: [{
         _id:false,
-        community_id: { type: String ,required:true}, // Custom reference ID
+        community_id: { type: String ,required:true},
         name:{type: String},
         community_token: { type: String, required: true }
     }],
     chat_queue: {
         type: [{
             _id:false,
-            id: { type: String, required: true },
+            chat_id: { type: String, required: true },
             name: { type: String, required: true },
             message_queue: [{
                 _id:false,
-                id:{type:String,required:true},
+                message_id:{type:String,required:true},
                 timestamp:{type:Date,default:Date.now},
                 message:{type:String,required:true}
             }],

@@ -6,6 +6,8 @@ import sessionless from "./../controller/sessionless_controller.js";
 
 const user_socketModel = new WebSocket.Server({noServer:true});
 
+
+
 user_socketModel.on("connection",async (socket_address,req)=>{
 
     socket_address.send(JSON.stringify({status:"sucess",message:"Start Your AI Chat"}));
@@ -14,12 +16,18 @@ user_socketModel.on("connection",async (socket_address,req)=>{
 
         const user_payload=await user_schema.findOne(
             {id:socket_address.id},
-            {"chat_queue.id":1,"chat_queue.name":1}
+            {"chat_queue.chat_id":1,"chat_queue.name":1}
         );
 
         if(user_payload.length>0){
+
             socket_address.send(JSON.stringify({message:payload}));
-        }
+
+        } else {
+
+            socket_address.send(JSON.stringify({message:"User Not Found"}))
+
+        };
 
     };
 

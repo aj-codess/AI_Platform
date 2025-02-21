@@ -6,11 +6,11 @@ const create_chat = async (user_id, name) => {
 
     try {
 
-        const chat_id = log_service.gen_id();
-
         const isExist = await user_schema.findOne({ id: user_id });
 
         if (isExist) {
+
+            const chat_id = log_service.gen_id();
 
             const isCreated = await user_schema.findOneAndUpdate(
                 { id: user_id },
@@ -53,61 +53,130 @@ const create_chat = async (user_id, name) => {
 
 
 
-const delete_chat=async(user_id,chat_id)=>{
+const delete_chat = async (user_id, chat_id) => {
+
+    try {
+
+        const user = await user_schema.findOne({ id: user_id });
+
+        if (!user) {
+
+            return { status: "Error", message: "User not found" };
+
+        }
+
+        const isDeleted = await user_schema.findOneAndUpdate(
+            { id: user_id },
+            { $pull: { chat_queue: { chat_id: chat_id } } },
+            { new: true }
+        );
+
+        if (!isDeleted) {
+
+            return { status: "Error", message: "Chat not found or could not be deleted" };
+
+        }
+
+
+        const newChatList = await user_schema.findOne(
+            { id: user_id },
+            { "chat_queue.chat_id": 1, "chat_queue.name": 1, _id: 0 }
+        );
+
+        return { status: "Success", newChatList: newChatList.chat_queue };
+
+    } catch (error) {
+
+        console.error("Database Error:", error);
+
+        return { status: "Error", message: "Internal Server Error" };
+
+    };
+
+};
+
+
+
+const delete_message=async(user_id,chat_id,message_id)=>{
 
     try{
 
-        const isExist=await user_schema.findOne({id:user_id});
+        const isExist=await user_schema.findOne({user_id:user_id});
 
-        if(isExist){
+        if(!isExist){
 
-            const isDeleted=await user_schema.findOneAndUpdate(
-                {id:user_id},
-                {
-                    $pull:{chat_queue:{chat_id:chat_id}}
+            return {status:"Error",message:"User not Found"};
 
-                },
-                {new:true}
-            );
-
-            if(isDeleted){
-
-                const newChatList=await user_schema.findOne(
-                    {id:user_id},
-                    {"chat_queue.chat_id":1,"chat_queue.name":1}
-                );
+        };
         
-                if(newChatList.length>0){
+        const isDeleted = await user_schema.findOneAndUpdate(
+            { user_id: user_id, "chat_queue.chat_id": chat_id },
+            {
+                $pull: {
+                    "chat_queue.$.message_queue": { message_id: message_id }
+                }
+            },
+            { new: true }
+        );
 
-                    return {status:"Success",newChatList};
+        if (!isDeleted) {
 
-                };
+            return { status: "Error", message: "Message not found or could not be deleted" };
 
-            };
+        }else{
 
-        } else{
-            
-            return { status: "Error", message: "User not found" };
+            return {status:"success",message:"Message Deleted"}
 
         };
 
+
     } catch(error){
 
-        console.error("Database Error: ",error);
+        console.error("Database Error:", error);
 
-        return {status:"Error",message:"Internal Server Error"};
+        return { status: "Error", message: "Internal Server Error!. Message was not Deleted" };
 
     }
 
 };
 
 
-const delete_message=async(user_id,chat_id,message_id)=>{
+
+
+
+const chatMessage=async(user_id,chat_id)=>{
+
+    try{
+
+        const userChat = await user_schema.findOne(
+            { id: user_id, "chat_queue.chat_id": chat_id },
+            { "chat_queue.$": 1 }
+        );
+
+        if (!userChat || !userChat.chat_queue.length) {
+            return { status: "Error", message: "Chat not found" };
+        }
+
+        const messages = userChat.chat_queue[0].message_queue;
+
+        return { status: "Success", chat_id, messages };
+
+    } catch(error){
+
+        console.error("Database Error: ",error);
+
+        return {status:"Error",message:"Internal Server Error!."}
+
+    }
 
 };
 
 
-const make_chat=async()=>{
+
+
+const make_chat=async(user_id,chat_id)=>{
+
+
 
 };
 
@@ -116,5 +185,6 @@ export default {
     create_chat,
     delete_chat,
     delete_message,
+    chatMessage,
     make_chat
 }

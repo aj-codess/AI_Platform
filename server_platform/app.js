@@ -85,6 +85,8 @@ server.on("upgrade",async (req,socket,head)=>{
 
                 socket_address.id=req.id;
 
+                socket_address.body=req.body;
+
                 community_socketModel.emit("connection",socket_address,req);
 
             });

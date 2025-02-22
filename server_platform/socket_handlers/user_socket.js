@@ -7,7 +7,6 @@ import sessionless from "./../controller/sessionless_controller.js";
 const user_socketModel = new WebSocket.Server({noServer:true});
 
 
-
 user_socketModel.on("connection",async (socket_address,req)=>{
 
     socket_address.send(JSON.stringify({status:"sucess",message:"Start Your AI Chat"}));
@@ -82,6 +81,16 @@ user_socketModel.on("connection",async (socket_address,req)=>{
         }
 
     });
+
+
+//implement a ping pong later for a real time db reading using schema.watch()
+    // socket_address.ping();
+
+    // socket_address.on("pong",()=>{
+
+        
+
+    // });
 
 
     socket_address.on("close",()=>{

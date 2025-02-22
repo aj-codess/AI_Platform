@@ -1,5 +1,6 @@
 import user_schema from "./../models/user_schema.js";
 import community_schema from "../models/community_schema.js";
+import connection_schema from "./../models/connection_schema.js"
 
 import sessionless_contr from "./sessionless_controller.js";
 import generateCommunityToken from "../service/token_dep_module.js";
@@ -43,7 +44,7 @@ const createCom=async(req,res)=>{
 
         const id=req.id;
 
-        com_id=log_service.gen_id();
+        const com_id=log_service.gen_id();
 
         const token=generateCommunityToken();
 
@@ -56,6 +57,11 @@ const createCom=async(req,res)=>{
             community_token:token,
         });
 
+        const new_room=new connection_schema({
+            community_id:com_id,
+            socket_addresses:[]
+        });
+
         const ref={
             community_id:com_id,
             name:name,
@@ -63,6 +69,7 @@ const createCom=async(req,res)=>{
         };
 
         const comIsSaved=await new_community.save();
+        const roomIsSaved=await new_room.save();
 
         const isSaved_ref=await user_schema.findOneAndUpdate(
             {id:id},
@@ -88,7 +95,7 @@ const createCom=async(req,res)=>{
                 return res.status(500).json({message:"Internal server Error Re-create community"});
             }
 
-        } else if(comIsSaved && isSaved_ref){
+        } else if(comIsSaved && isSaved_ref && roomIsSaved){
 
             return res.status(200).json({
                 message:"community Created",
@@ -104,7 +111,6 @@ const createCom=async(req,res)=>{
     }
 
 };
-
 
 
 
@@ -135,11 +141,13 @@ const joinCom=async(req,res)=>{
                     if(isAdded){
                         return res.status(200).json({
                             messageFrom_system:"Token Matches",
-                            messageFrom_community:`welcome to ${name}`
+                            messageFrom_community:`welcome to ${name}`,
+                            name:community_data.name,
+                            community_id:community_data.community_id,
+                            community_token:community_data.community_token
                         });
                     }
-//send to the client essentials to connect to the websocket - which is the community id,name and token
-//it is the id which will be used for the socket
+
                 } else{
 
                     const isAdded=await community_schema.findOneAndUpdate(

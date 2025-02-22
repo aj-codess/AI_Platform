@@ -1,6 +1,6 @@
 import user_schema from "./../models/user_schema.js";
 import logService from "./../service/logService.js"
-
+import api_endpoint from "./../config/api_endpoint.js";
 
 const create_chat = async (user_id, name) => {
 
@@ -173,42 +173,41 @@ const chatMessage=async(user_id,chat_id)=>{
 
 
 
-const append_message=async(user_id,chat_id,message)=>{
+const append_message = async (user_id, chat_id, message, role) => {
 
-    try{
+    try {
+        const message_toAppend = {
+            message_id: logService.gen_id(),
+            role: role, 
+            message: message,        };
 
-        const message_toAppend={
-            message_id:logService.gen_id(),
-            message:message
-        };
-
-        const append=await user_schema.findOneAndUpdate(
-            {id:user_id,"chat_queue.chat_id":chat_id},
+        const append = await user_schema.findOneAndUpdate(
+            { id: user_id, "chat_queue.chat_id": chat_id },
             {
-                $push:{"chat_queue.$.message_queue":message_toAppend}
+                $push: { "chat_queue.$.message_queue": message_toAppend }
             },
-            {new:true}
+            { new: true }
         );
 
         if(append){
             return true;
-        };
+        } else{
+            return false;
+        }
 
+    } catch (error) {
+    
+        console.error("Error Appending Message: ", error);
+    
         return false;
-
-    } catch(error){
-
-        console.error("Error Appending Message: ",error);
-
-        return false;
-
-    };
+    
+    }
 
 };
 
 
 
-const make_chat=async(user_id,chat_id,message)=>{
+const make_chat=async(user_id,chat_id,message,role)=>{
 
     try{
 
@@ -220,21 +219,21 @@ const make_chat=async(user_id,chat_id,message)=>{
 
         };
 
-        const append=await append_message(user_id,chat_id,message);
+        const append=await append_message(user_id,chat_id,message,role);
 
         if(append){
             
-            let api_response;
+            let api_response=await api_endpoint.generateResponse(message);
 
             if(api_response){
 
-                const response_isAppended=await append_message(user_id,chat_id,JSON.parse(api_response));
+                const response_isAppended=await append_message(user_id,chat_id,api_response,"system");
 
                 if(response_isAppended){
 
-                    return {status:"success",api_response};
+                    return {status:"success",role:"system",api_response};
                     
-                }
+                };
 
             };
 

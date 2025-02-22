@@ -60,7 +60,7 @@ user_socketModel.on("connection",async (socket_address,req)=>{
                     break;
 
                     case "make_chat":
-                    payload_out=await socket_action.make_chat(socket_address.id,chat_id);
+                    payload_out=await socket_action.make_chat(socket_address.id,chat_id,"user");
                     break;
 
                     defaut:

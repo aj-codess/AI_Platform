@@ -123,10 +123,6 @@ const delete_message=async(user_id,chat_id,message_id)=>{
 
             return { status: "Error", message: "Message not found or could not be deleted" };
 
-
-
-            return {status:"success",message:"Message Deleted"}
-
         };
 
 
@@ -139,7 +135,6 @@ const delete_message=async(user_id,chat_id,message_id)=>{
     }
 
 };
-
 
 
 

@@ -70,7 +70,6 @@ community_socketModel.on("connection",async(socket_address,req)=>{
 
             };
 
-
             await make_broadcast(community_id,name,AI_res_obj);
 
             await pushTo_db(community_id,name,payload_in);
@@ -83,18 +82,45 @@ community_socketModel.on("connection",async(socket_address,req)=>{
 
             console.log(error.message);
 
+        };
+
+    });
+
+
+
+    const pingInterval = setInterval(() => {
+
+        if (socket_address.readyState === WebSocket.OPEN) {
+    
+            socket_address.ping();
+
         }
 
+    }, 2000);
+
+
+
+    socket_address.on("pong",async()=>{
+
+        const check_db_change=community_schema.watch({community_id,name});
+
+        check_db_change.on("change",async()=>{
+
+            socket_address.send(JSON.stringify({status:"update",data:check_db_change}));
+
+        });
+
+    })
+
+
+
+    socket_address.on("close",async()=>{
+
+        await remove_connection(community_id,name,socket_address.id);
+
     });
 
-
-//make a ping pong event mechanism for db streaming
-
-    socket_address.on("close",()=>{
-
-        //get track of the user that disconnected
-
-    });
+    
 
     socket_address.on("error",(err)=>{
 
@@ -197,6 +223,26 @@ const store_connection=async(community_id,name,socket_details)=>{
     }
 
 };
+
+
+
+const remove_connection=async(community_id,name,socket_address_id)=>{
+
+    try{
+
+        const onRemove=await community_schema.findOneAndUpdate(
+            {community_id,name},
+            {
+                $pull:{socket_addresses:socket_address_id}
+            }
+        );
+
+    } catch(error){
+        console.error("unable to remove socketaddress : ",error);
+    }
+
+};
+
 
 
 export default community_socketModel;

@@ -85,6 +85,6 @@ userSchema.methods.toJSON = function () {
 
 
 
-const user = mongoose.model("User", userSchema);
+const user_schema = mongoose.model("User", userSchema);
 
-export default user;
+export default user_schema;

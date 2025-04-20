@@ -162,10 +162,10 @@ class entry{
 
 
 const payload = {
-    email: "jgyei339@gmail.com",
-    password: "C%ry9to_2_g3t",
-    name:"aj-codess",
-    phone:"0207924832"
+    email: "",
+    password: "",
+    name:"",
+    phone:""
 };
 
 const dev_entry = new entry();

@@ -29,7 +29,7 @@ community_socketModel.on("connection",async(socket_address,req)=>{
 
 
     const socket_details={
-        socket_id:socker_address.id,
+        socket_id:socket_address.id,
         ip:socket_address.handshake.address,
         port:process.env.SERVER_PORT,
         connected_at: new Date()
